@@ -837,8 +837,15 @@ def show_high_recommendation_without_explanation():
                     
                     # 存储生成的设计
                     if designs:
-                        st.session_state.generated_designs = designs
-                        st.session_state.selected_design_index = 0
+                        if design_count == 1:
+                            # 对于单个设计，直接设为最终设计
+                            st.session_state.final_design = designs[0][0]
+                            st.session_state.design_info = designs[0][1]
+                            st.session_state.generated_designs = []
+                        else:
+                            # 对于多个设计，显示选择选项
+                            st.session_state.generated_designs = designs
+                            st.session_state.selected_design_index = 0
                         message_area.success(f"Generated {len(designs)} designs in {generation_time:.1f} seconds!")
                     else:
                         message_area.error("Could not generate any designs. Please try again.")
