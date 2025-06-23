@@ -478,7 +478,7 @@ def generate_complete_design(design_prompt, variation_id=None):
             2. IMPORTANT: The background MUST be exactly {color_name} color with HEX code {color_hex}
             3. Clear and distinct graphic
             4. Good contrast with colors that will show well on fabric
-            
+            5. Do not include any text or numbers
             6. IMPORTANT: Do NOT include any mockups or product previews
             7. IMPORTANT: Create ONLY the logo graphic itself
             8. NO META REFERENCES - do not show the logo applied to anything
@@ -816,7 +816,7 @@ def show_high_recommendation_without_explanation():
                     
                     # 创建进度条和状态消息在输入框下方
                     progress_bar = progress_area.progress(0)
-                    message_area.info(f"AI is generating {design_count} unique designs with consistent colors for you, please wait...")
+                    message_area.info(f"AI is generating {design_count} unique designs for you, it may take one minute to generate. Do not refresh the page or close the browser. Please wait, thank you♪(･ω･)ﾉ")
                     
                     # 记录开始时间
                     start_time = time.time()
