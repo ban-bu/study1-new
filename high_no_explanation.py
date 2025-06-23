@@ -835,17 +835,11 @@ def show_high_recommendation_without_explanation():
                     end_time = time.time()
                     generation_time = end_time - start_time
                     
-                    # 存储生成的设计（仅显示用途）
+                    # 存储生成的设计
                     if designs:
                         st.session_state.generated_designs = designs
+                        st.session_state.selected_design_index = 0
                         message_area.success(f"Generated {len(designs)} designs in {generation_time:.1f} seconds!")
-                        
-                        # 立即清除不必要的状态，只保留显示所需的
-                        st.session_state.user_prompt = ""
-                        st.session_state.final_design = None
-                        st.session_state.design_info = None
-                        st.session_state.is_generating = False
-                        st.session_state.should_generate = False
                     else:
                         message_area.error("Could not generate any designs. Please try again.")
                     
