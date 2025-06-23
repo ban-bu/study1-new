@@ -660,76 +660,28 @@ def show_high_recommendation_without_explanation():
                     for i in range(min(3, design_count)):
                         with row1_cols[i]:
                             design, _ = st.session_state.generated_designs[i]
-                            # 添加选中状态的样式
-                            if i == st.session_state.selected_design_index:
-                                st.markdown(f"""
-                                <div style="border:3px solid #f63366; padding:3px; border-radius:5px;">
-                                <p style="text-align:center; color:#f63366; margin:0; font-weight:bold;">Design {i+1}</p>
-                                </div>
-                                """, unsafe_allow_html=True)
-                            else:
-                                st.markdown(f"<p style='text-align:center;'>Design {i+1}</p>", unsafe_allow_html=True)
-                            
-                            # 显示设计并添加点击功能
+                            st.markdown(f"<p style='text-align:center;'>Design {i+1}</p>", unsafe_allow_html=True)
+                            # 显示设计
                             st.image(design, use_container_width=True)
-                            if st.button(f"Select Design {i+1}", key=f"select_design_{i}"):
-                                st.session_state.selected_design_index = i
-                                st.session_state.final_design = design
-                                st.session_state.design_info = st.session_state.generated_designs[i][1]
-                                st.rerun()
                     
                     # 显示第二行
                     for i in range(3, design_count):
                         with row2_cols[i-3]:
                             design, _ = st.session_state.generated_designs[i]
-                            # 添加选中状态的样式
-                            if i == st.session_state.selected_design_index:
-                                st.markdown(f"""
-                                <div style="border:3px solid #f63366; padding:3px; border-radius:5px;">
-                                <p style="text-align:center; color:#f63366; margin:0; font-weight:bold;">Design {i+1}</p>
-                                </div>
-                                """, unsafe_allow_html=True)
-                            else:
-                                st.markdown(f"<p style='text-align:center;'>Design {i+1}</p>", unsafe_allow_html=True)
-                            
-                            # 显示设计并添加点击功能
+                            st.markdown(f"<p style='text-align:center;'>Design {i+1}</p>", unsafe_allow_html=True)
+                            # 显示设计
                             st.image(design, use_container_width=True)
-                            if st.button(f"Select Design {i+1}", key=f"select_design_{i}"):
-                                st.session_state.selected_design_index = i
-                                st.session_state.final_design = design
-                                st.session_state.design_info = st.session_state.generated_designs[i][1]
-                                st.rerun()
                 else:
                     # 单行显示
                     cols = st.columns(design_count)
                     for i in range(design_count):
                         with cols[i]:
                             design, _ = st.session_state.generated_designs[i]
-                            # 添加选中状态的样式
-                            if i == st.session_state.selected_design_index:
-                                st.markdown(f"""
-                                <div style="border:3px solid #f63366; padding:3px; border-radius:5px;">
-                                <p style="text-align:center; color:#f63366; margin:0; font-weight:bold;">Design {i+1}</p>
-                                </div>
-                                """, unsafe_allow_html=True)
-                            else:
-                                st.markdown(f"<p style='text-align:center;'>Design {i+1}</p>", unsafe_allow_html=True)
-                            
-                            # 显示设计并添加点击功能
+                            st.markdown(f"<p style='text-align:center;'>Design {i+1}</p>", unsafe_allow_html=True)
+                            # 显示设计
                             st.image(design, use_container_width=True)
-                            if st.button(f"Select Design {i+1}", key=f"select_design_{i}"):
-                                st.session_state.selected_design_index = i
-                                st.session_state.final_design = design
-                                st.session_state.design_info = st.session_state.generated_designs[i][1]
-                                st.rerun()
                 
-                # 添加确认选择按钮
-                if st.button("✅ Confirm Selection"):
-                    selected_design, selected_info = st.session_state.generated_designs[st.session_state.selected_design_index]
-                    st.session_state.final_design = selected_design
-                    st.session_state.design_info = selected_info
-                    st.session_state.generated_designs = []  # 清空生成的设计列表
-                    st.rerun()
+
         else:
             # 显示原始空白T恤
             with design_area.container():
@@ -890,27 +842,4 @@ def show_high_recommendation_without_explanation():
                     message_area.error(f"An error occurred: {str(e)}")
                     st.error(traceback.format_exc())
     
-    # 下载按钮 (在主区域底部)
-    if st.session_state.final_design is not None:
-        st.markdown("---")
-        # 移除两列布局
-        # download_col, next_col = st.columns(2)
-        
-        # 直接显示下载按钮，不使用列布局
-        buf = BytesIO()
-        st.session_state.final_design.save(buf, format="PNG")
-        buf.seek(0)
-        st.download_button(
-            label="💾 下载设计图",
-            data=buf,
-            file_name="ai_tshirt_design.png",
-            mime="image/png",
-            use_container_width=True  # 使按钮占据整个宽度
-        )
-        
-        # 移除确认按钮和问卷相关功能
-        # with next_col:
-        #     # 确认完成按钮
-        #     if st.button("✅ Confirm"):
-        #         st.session_state.page = "survey"
-        #         st.rerun()
+
