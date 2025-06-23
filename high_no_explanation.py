@@ -576,9 +576,20 @@ def generate_multiple_designs(design_prompt, count=1):
     
     return designs
 
+def clear_all_cache():
+    """完全清除所有缓存状态，确保每次都是全新的"""
+    cache_keys = ['user_prompt', 'final_design', 'design_info', 'is_generating', 
+                  'should_generate', 'generated_designs', 'selected_design_index', 'keywords']
+    for key in cache_keys:
+        if key in st.session_state:
+            del st.session_state[key]
+
 def show_high_recommendation_without_explanation():
     st.title("👕 AI Recommendation Experiment Platform")
     st.markdown("### Study1-Let AI Design Your T-shirt")
+    
+    # 在页面开始时清除所有缓存
+    clear_all_cache()
     
     # 显示实验组和设计数量信息
     st.info(f"You are currently in Study1, and AI will generate {DEFAULT_DESIGN_COUNT} T-shirt design options for you")
@@ -720,12 +731,8 @@ def show_high_recommendation_without_explanation():
         </div>
         """, unsafe_allow_html=True)
         
-        # 初始化关键词状态
-        if 'keywords' not in st.session_state:
-            st.session_state.keywords = ""
-        
-        # 关键词输入框
-        keywords = st.text_input("Enter keywords for your design", value=st.session_state.keywords, 
+        # 关键词输入框 - 不保存历史输入，每次都是空白
+        keywords = st.text_input("Enter keywords for your design", value="", 
                               placeholder="e.g., casual, nature, blue", key="input_keywords")
         
         # 生成设计按钮
@@ -739,8 +746,7 @@ def show_high_recommendation_without_explanation():
         
         # 生成设计按钮事件处理
         if generate_button:
-            # 保存用户输入的关键词
-            st.session_state.keywords = keywords
+            # 不保存用户输入的关键词，确保每次都是全新输入
             
             # 检查是否输入了关键词
             if not keywords:
@@ -749,15 +755,17 @@ def show_high_recommendation_without_explanation():
                 # 直接使用用户输入的关键词作为提示词
                 user_prompt = keywords
                 
-                # 保存用户输入
-                st.session_state.user_prompt = user_prompt
+                # 完全清除所有缓存状态，确保全新生成
+                st.session_state.user_prompt = ""
+                st.session_state.final_design = None
+                st.session_state.generated_designs = []
+                st.session_state.design_info = None
+                st.session_state.selected_design_index = 0
+                st.session_state.is_generating = False
+                st.session_state.should_generate = False
                 
                 # 使用固定的设计数量
                 design_count = DEFAULT_DESIGN_COUNT
-                
-                # 清空之前的设计
-                st.session_state.final_design = None
-                st.session_state.generated_designs = []
                 
                 try:
                     # 显示生成进度
@@ -827,11 +835,17 @@ def show_high_recommendation_without_explanation():
                     end_time = time.time()
                     generation_time = end_time - start_time
                     
-                    # 存储生成的设计
+                    # 存储生成的设计（仅显示用途）
                     if designs:
                         st.session_state.generated_designs = designs
-                        st.session_state.selected_design_index = 0
                         message_area.success(f"Generated {len(designs)} designs in {generation_time:.1f} seconds!")
+                        
+                        # 立即清除不必要的状态，只保留显示所需的
+                        st.session_state.user_prompt = ""
+                        st.session_state.final_design = None
+                        st.session_state.design_info = None
+                        st.session_state.is_generating = False
+                        st.session_state.should_generate = False
                     else:
                         message_area.error("Could not generate any designs. Please try again.")
                     
