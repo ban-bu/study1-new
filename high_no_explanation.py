@@ -471,19 +471,21 @@ def generate_complete_design(design_prompt, variation_id=None):
         logo_image = None
         
         if logo_description:
-            # 修改Logo提示词，明确指定颜色代码，确保生成的Logo背景与T恤颜色完全一致
-            logo_prompt = f"""Create a Logo design for printing: {logo_description}. 
-            Requirements: 
-            1. Simple professional design
-            2. IMPORTANT: The background MUST be exactly {color_name} color with HEX code {color_hex}
-            3. Clear and distinct graphic
-            4. Good contrast with colors that will show well on fabric
-            5. Must remeber taht do not include any text, numbers or color name, only logo graphic
-            6. IMPORTANT: Do NOT include any mockups or product previews
-            7. IMPORTANT: Create ONLY the logo graphic itself
-            8. NO META REFERENCES - do not show the logo applied to anything
-            9. Design should be a standalone graphic symbol/icon only
-            10. CRITICAL: The entire background must be solid color {color_hex} with no variations"""
+            # 优化后的 DALL·E 3 提示词
+            logo_prompt = f"""
+            Create a **standalone logo graphic** for printing, based on the following description: {logo_description}
+            
+            Design Requirements:
+            1. The design must be simple and professional.
+            2. CRITICAL: The background color must be a solid {color_name} with the exact HEX code {color_hex}. No gradients or variations.
+            3. The logo graphic should be clear, bold, and visually distinct.
+            4. Ensure good contrast—the design should stand out and be clearly visible when printed on fabric.
+            5. Do **not** include any text, numbers, letters, or the color name—only the graphic/logo itself.
+            6. Do **not** include any mockups, product previews, or representations of the logo on any items.
+            7. Do **not** add any meta elements, annotations, or references outside the logo symbol itself.
+            8. The output should be a single, standalone logo icon/symbol with a solid {color_hex} background.
+            """
+
             
             # 使用当前T恤颜色生成logo
             logo_image = generate_vector_image(logo_prompt, color_hex)
